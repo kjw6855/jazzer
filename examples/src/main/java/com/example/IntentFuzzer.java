@@ -49,7 +49,7 @@ public class IntentFuzzer {
     public static void fuzzerTestOneInput(byte[] data) {
         String fuzzStr = new String(data, StandardCharsets.US_ASCII);
         try {
-            System.out.printf("[%d] %s\n", test_cnt, fuzzStr);
+//            System.out.printf("[%d] %s\n", test_cnt, fuzzStr);
             Files.write(Paths.get("/tmp/ifuzzer/output"), data);
 
             proxyOutput.write(HELLO_MSG, 0, 4);
@@ -65,12 +65,12 @@ public class IntentFuzzer {
 
 //            ByteBuffer feedback = ByteBuffer.wrap(proxyInput.readAllBytes());
 //            System.out.printf("%d\n", feedback.position());
-            System.out.printf("Read now! %d\n", ByteBuffer.wrap(status).order(ByteOrder.LITTLE_ENDIAN).getInt());
+//            System.out.printf("Read now! %d\n", ByteBuffer.wrap(status).order(ByteOrder.LITTLE_ENDIAN).getInt());
 
             int len = 0;
             while (len < COVERAGE_MAP_SIZE) {
                 len += proxyInput.read(feedback, len, COVERAGE_MAP_SIZE - len);
-                System.out.printf(" %d/%d", len, COVERAGE_MAP_SIZE);
+//                System.out.printf(" %d/%d", len, COVERAGE_MAP_SIZE);
             }
 
             // i has 16 bits (7bits for state, 9bits for ID)
