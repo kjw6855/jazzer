@@ -59,13 +59,14 @@ public class IntentFuzzer {
         }
 
         try {
-            byte[] status = new byte[4];
+            byte[] statusBytes = new byte[4];
             // 1. read first input (int), throw error message
-            proxyInput.read(status, 0, 4);
+            proxyInput.read(statusBytes, 0, 4);
 
 //            ByteBuffer feedback = ByteBuffer.wrap(proxyInput.readAllBytes());
 //            System.out.printf("%d\n", feedback.position());
-//            System.out.printf("Read now! %d\n", ByteBuffer.wrap(status).order(ByteOrder.LITTLE_ENDIAN).getInt());
+            int status = ByteBuffer.wrap(statusBytes).order(ByteOrder.LITTLE_ENDIAN).getInt();
+            //System.out.printf("Status: %d\n", status);
 
             int len = 0;
             while (len < COVERAGE_MAP_SIZE) {
@@ -82,6 +83,13 @@ public class IntentFuzzer {
                 }
             }
 
+            switch (status) {
+                case 1:
+                    throw new FailureException();
+                case 2:
+                    throw new InvalidException();
+            }
+
             // NOTE: coverage for 3 bytes?? vs 65536 bytes for AFL?
         } catch (IOException e) {
             e.printStackTrace();
@@ -90,5 +98,13 @@ public class IntentFuzzer {
 
     private static class EndFuzzException extends RuntimeException {
         EndFuzzException(String msg) { super(msg); }
+    }
+
+    private static class FailureException extends RuntimeException {
+        FailureException() { super(); }
+    }
+
+    private static class InvalidException extends RuntimeException {
+        InvalidException() { super(); }
     }
 }

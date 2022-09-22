@@ -19,11 +19,17 @@ java_fuzz_target_test(
     srcs = ["src/main/java/com/example/IntentFuzzer.java"],
     #hook_jar = "ExampleFuzzerHooks_deploy.jar",
     fuzzer_args = [
+        "--coverage_dump=/tmp/ifuzzer/jazzer.dump",
         "-use_value_profile=1",
+        "--keep_going=3",
         "/tmp/ifuzzer/seed",
     ],
     target_class = "com.example.IntentFuzzer",
-    expected_findings = ["com.example.IntentFuzzer$$EndFuzzException"],
+    expected_findings = [
+        "com.example.IntentFuzzer$$EndFuzzException",
+        "com.example.IntentFuzzer$$FailureException",
+        "com.example.IntentFuzzer$$InvalidException",
+    ],
 )
 
 java_fuzz_target_test(
